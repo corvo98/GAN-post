@@ -1,7 +1,4 @@
 [Tistory] https://it-the-hunter.tistory.com
-
-[colab] https://colab.research.google.com/drive/1pcQ9Q4xxtVgLkooq6lz775ZUpw0QKYqI?hl=ko#scrollTo=CTx3jp-btolb
-
 ------------------------------------------------------------------------------------------------
 2022.11.19 - Intro
 - def : 함수_매개변수를 받아서 연산 후 결과를 리턴
@@ -94,6 +91,7 @@ x, y = next(iter(dataloader))
 ------------------------------------------------------------------------------------------------
 2022.11.30 - image to Tensor (by torch)
 1. PIL
+[colab] https://colab.research.google.com/drive/18lva9pBppOgc-IHBF7PiOnG-iilwgRD-
 ~~~py
 # pytorch를 이용해 이미지를 Tensor 형식으로 불러오기
 import PIL 
@@ -115,6 +113,7 @@ print(img_t)
 img_t
 ~~~
 2. matplotlib
+[colab] https://colab.research.google.com/drive/1JtKLBIiKU1e85EBeTzh2wBTg0_ICURLt
 ~~~py
 import torch
 import PIL
@@ -135,6 +134,7 @@ plt.imshow(img_t)
 ~~~
 ------------------------------------------------------------------------------------------------
 2022.12.01 - image normlize and DataLoader
+[colab] https://colab.research.google.com/drive/15ARAy0l_zr46N5hANAbpAkJKq_uVB9AW
 ~~~py
 from PIL import Image
 import torch

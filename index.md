@@ -92,3 +92,66 @@ class myDataset(Dataset):
 x, y = next(iter(dataloader))
 ~~~
 ------------------------------------------------------------------------------------------------
+2022.11.30 - image to Tensor (by torch)
+1. PIL
+~~~py
+# pytorch를 이용해 이미지를 Tensor 형식으로 불러오기
+import PIL 
+import torchvision.transforms as transforms
+
+# PIL -> Tensor
+img = PIL.Image.open('/root/test_images/1091500_20221207030912_1.png')
+
+tf = transforms.ToTensor()
+img_t = tf(img) # Tensor로 변환
+
+print(img_t.size())  # channel, height, width
+
+# Tensor -> PIL
+tf = transforms.ToPILImage()
+img_t = tf(img_t)
+print(img_t)
+
+img_t
+~~~
+2. matplotlib
+~~~py
+import torch
+import PIL
+import matplotlib.pyplot as plt
+import torchvision.transforms as transforms
+
+img = PIL.Image.open('/content/1091500_20221208025259_1.png')
+tf = transforms.ToTensor()
+img_t = tf(img)
+
+print(img_t.size())
+
+img_t = img_t.permute(1, 2, 0)
+
+print(img_t.size())
+
+plt.imshow(img_t)
+~~~
+------------------------------------------------------------------------------------------------
+2022.12.01 - image normlize and DataLoader
+~~~py
+from PIL import Image
+import torch
+from torch.utils.data import Dataset, DataLoader
+import numpy as np
+import torchvision
+from torchvision import transforms
+
+
+
+trans = transforms.Compose([transforms.Resize((1000,563)),  # 이미지 resize 
+                            transforms.ToTensor(),
+                            transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))])  # 이미지 정규화
+trainset = torchvision.datasets.ImageFolder(root = '/', transform = trans)
+
+trainloader = DataLoader(trainset, batch_size=5, shuffle=False, num_workers=2)
+dataiter = iter(trainloader)
+images = dataiter.next()
+print(images)
+~~~

@@ -62,10 +62,11 @@ print('{:.1f} gigabytes of available RAM\n'.format(ram_gb))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('학습을 진행하는 기기:',device)
 ~~~
-# 구글 드라이브 연결. 만약 직접 데이터셋을 사용한다면 주석 해제.
-# from google.colab import drive
-# drive.mount('/content/drive')
-
+# 구글 드라이브 연결 
+~~~py
+from google.colab import drive
+drive.mount('/content/drive')
+~~~
 1. fastai : 자연어처리, 추천 관련 모듈을 제공하며 딥러닝 진입장벽을 낮추기 위함
 ~~~py
 !pip install fastai==2.4

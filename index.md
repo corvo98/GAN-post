@@ -102,8 +102,9 @@ x, y = next(iter(dataloader))
 
 ------------------------------------------------------------------------------------------------
 2022.11.30 - image to Tensor (by torch)
-1. PIL
+- PIL
 [colab] https://colab.research.google.com/drive/18lva9pBppOgc-IHBF7PiOnG-iilwgRD-
+
 ~~~py
 # pytorch를 이용해 이미지를 Tensor 형식으로 불러오기
 import PIL 
@@ -125,8 +126,9 @@ print(img_t)
 img_t
 ~~~
 
-2. matplotlib
+- matplotlib
 [colab] https://colab.research.google.com/drive/1JtKLBIiKU1e85EBeTzh2wBTg0_ICURLt
+
 ~~~py
 import torch
 import PIL
@@ -145,6 +147,7 @@ print(img_t.size())
 
 plt.imshow(img_t)
 ~~~
+
 ------------------------------------------------------------------------------------------------
 2022.12.01 - image normalize and DataLoader
 [colab] https://colab.research.google.com/drive/15ARAy0l_zr46N5hANAbpAkJKq_uVB9AW
@@ -168,10 +171,11 @@ dataiter = iter(trainloader)
 images = dataiter.next()
 print(images)
 ~~~
+
 ------------------------------------------------------------------------------------------------
 2022.12.09 - dataloader
 [colab] https://colab.research.google.com/drive/1raoUhYSxsGZ3MBqcevkXkmk8lrTwPMs9#scrollTo=CaHrlHrW7ttU
-1. coco data를 colab에서 바로 다운
+- coco data를 colab에서 바로 다운
 ~~~py
 from fastai.data.external import untar_data, URLs
 import glob
@@ -179,12 +183,12 @@ import glob
 coco_path = untar_data(URLs.COCO_SAMPLE)
 ~~~
 
-2. coco image들의 경로를 모아 리스트로 작성
+- coco image들의 경로를 모아 리스트로 작성
 ~~~py
 paths = glob.glob(str(coco_path) + "/train_sample/*.jpg")
 ~~~
 
-3. 이미지들을 각각 train, validation 데이터로 사용
+- 이미지들을 각각 train, validation 데이터로 사용
 ~~~py
 import numpy as np
 
@@ -199,7 +203,7 @@ print(len(train_paths))
 print(len(val_paths))
 ~~~
 
-4. 데이터 전처리 및 입력
+- 데이터 전처리 및 입력
 ~~~py
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
@@ -242,7 +246,7 @@ dataset_train = ColorizationDataset(train_paths, mode='train')
 dataset_val = ColorizationDataset(val_paths, mode='val')
 ~~~
 
-5. dataloader 생성 및 size 확인
+- dataloader 생성 및 size 확인
 ~~~py
 dataset_train = ColorizationDataset(train_paths, mode='train')
 dataset_val = ColorizationDataset(val_paths, mode='val')

@@ -146,7 +146,7 @@ print(img_t.size())
 plt.imshow(img_t)
 ~~~
 ------------------------------------------------------------------------------------------------
-2022.12.01 - image normlize and DataLoader
+2022.12.01 - image normalize and DataLoader
 [colab] https://colab.research.google.com/drive/15ARAy0l_zr46N5hANAbpAkJKq_uVB9AW
 ~~~py
 from PIL import Image
@@ -169,7 +169,7 @@ images = dataiter.next()
 print(images)
 ~~~
 ------------------------------------------------------------------------------------------------
-2022.12.08 - generator
+2022.12.09 - dataloader
 [colab] https://colab.research.google.com/drive/1raoUhYSxsGZ3MBqcevkXkmk8lrTwPMs9#scrollTo=CaHrlHrW7ttU
 1. coco data를 colab에서 바로 다운
 ~~~py
@@ -178,8 +178,80 @@ import glob
 
 coco_path = untar_data(URLs.COCO_SAMPLE)
 ~~~
+
 2. coco image들의 경로를 모아 리스트로 작성
 ~~~py
 paths = glob.glob(str(coco_path) + "/train_sample/*.jpg")
 ~~~
-3. 
+
+3. 이미지들을 각각 train, validation 데이터로 사용
+~~~py
+import numpy as np
+
+np.random.seed(1)
+chosen_paths = np.random.choice(paths, 5000, replace=False)
+index = np.random.permutation(5000)
+
+train_paths = chosen_paths[index[:4000]]  # 앞의 4000장을 train 이미지로 사용
+val_paths = chosen_paths[index[4000:]]  # 뒤의 1000장은 validaion 이미지로 사용
+
+print(len(train_paths))
+print(len(val_paths))
+~~~
+
+4. 데이터 전처리 및 입력
+~~~py
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
+from PIL import Image # from cv2 import cv2
+from skimage.color import rgb2lab, lab2rgb
+import numpy as np
+
+class ColorizationDataset(Dataset):
+  # 생성자
+  def __init__(self, paths, mode='train'):
+    self.mode = mode
+    self.paths = paths
+
+    # if else문으로 mode가 train이 아닌지를 판별
+    if mode == "train":     # train인 경우, 이미지 사이즈를 정규화하고 random horizontal flip으로 augmentation
+      self.transforms = transforms.Compose([
+          transforms.Resize((256, 256), Image.BICUBIC),
+          transforms.RandomHorizontalFlip(),
+      ])
+
+    elif mode == "val":    # validation인 경우, 이미지 사이즈만 정규화
+      self.transforms = transforms.Resize((256, 256), Image.BICUBIC)
+
+    else:
+      raise Exception("train or validation only !!!")
+
+  def __getitem__(self, index):
+    img = Image.open(self.paths[index]).convert("RGB")  # 이미지 불러오기
+    img = np.array(self.transforms(img))  # 이미지를 transform에 넣고, 이미지를 numpy array로 변환
+    img = rgb2lab(img).astype("float32") # 이미지를 lab 채널로 바꿈
+    img = transforms.ToTensor()(img)  # 이미지를 tensor로 변환
+    L = img[[0], ...] / 50. -1
+    ab = img[[1, 2], ...] / 110.  # -1 -1 사이로 정규화 진행
+    return {'L' : L, 'ab' : ab}
+
+  def __len__(self):
+    return len(self.paths)
+
+dataset_train = ColorizationDataset(train_paths, mode='train')
+dataset_val = ColorizationDataset(val_paths, mode='val')
+~~~
+
+5. dataloader 생성 및 size 확인
+~~~py
+dataset_train = ColorizationDataset(train_paths, mode='train')
+dataset_val = ColorizationDataset(val_paths, mode='val')
+
+dataloader_train = DataLoader(dataset_train, batch_size=15, num_workers=3, pin_memory=True)
+dataloader_val = DataLoader(dataset_val, batch_size=15, num_workers=3, pin_memory=True)
+
+data = next(iter(dataloader_train))
+Ls, abs = data['L'], data['ab']
+print(Ls.shape, abs.shape)
+print(len(dataloader_train), len(dataloader_val))
+~~~

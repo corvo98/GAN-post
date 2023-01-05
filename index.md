@@ -175,7 +175,9 @@ print(images)
 ------------------------------------------------------------------------------------------------
 2022.12.09 - dataloader
 [colab] https://colab.research.google.com/drive/1raoUhYSxsGZ3MBqcevkXkmk8lrTwPMs9#scrollTo=CaHrlHrW7ttU
+
 - coco data를 colab에서 바로 다운
+
 ~~~py
 from fastai.data.external import untar_data, URLs
 import glob
@@ -184,11 +186,13 @@ coco_path = untar_data(URLs.COCO_SAMPLE)
 ~~~
 
 - coco image들의 경로를 모아 리스트로 작성
+
 ~~~py
 paths = glob.glob(str(coco_path) + "/train_sample/*.jpg")
 ~~~
 
 - 이미지들을 각각 train, validation 데이터로 사용
+
 ~~~py
 import numpy as np
 
@@ -204,6 +208,7 @@ print(len(val_paths))
 ~~~
 
 - 데이터 전처리 및 입력
+
 ~~~py
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
@@ -247,6 +252,7 @@ dataset_val = ColorizationDataset(val_paths, mode='val')
 ~~~
 
 - dataloader 생성 및 size 확인
+
 ~~~py
 dataset_train = ColorizationDataset(train_paths, mode='train')
 dataset_val = ColorizationDataset(val_paths, mode='val')
